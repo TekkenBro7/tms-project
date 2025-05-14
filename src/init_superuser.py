@@ -15,9 +15,7 @@ username = os.getenv("DJANGO_SUPERUSER_USERNAME")
 password = os.getenv("DJANGO_SUPERUSER_PASSWORD")
 
 if not username or not password:
-    raise ValueError(
-        "DJANGO_SUPERUSER_USERNAME and DJANGO_SUPERUSER_PASSWORD must be set"
-    )
+    raise ValueError("DJANGO_SUPERUSER_USERNAME and DJANGO_SUPERUSER_PASSWORD must be set")
 
 if not User.objects.filter(username=username).exists():
     User.objects.create_superuser(username=username, password=password)

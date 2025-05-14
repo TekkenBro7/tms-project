@@ -32,11 +32,8 @@ django-stubs = "^5.2.0"
 mypy = "^1.15.0"
 
 [tool.black]
-line-length = 79  
+line-length = 120
 
-[tool.flake8]
-max-line-length = 79
-
-[tool.mypy]
-python_version = "3.11"
-mypy_path = "src"
+[tool.isort]
+profile = "black"
+line_length = 120

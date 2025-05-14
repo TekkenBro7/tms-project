@@ -57,6 +57,7 @@ To start the app using Docker:
 ```bash
 docker-compose up --build
 ```
+И посмотрите чтобы в env файле было указано `POSTGRES_HOST=db`
 
 - Django will run on `http://localhost:8000`
 - PostgreSQL is available at port `5432`
@@ -74,7 +75,8 @@ poetry run python src/manage.py migrate
 ```bash
 poetry run python src/manage.py createsuperuser
 ```
-5. Start the development server
+5. Make sure that the `env` file specifies `POSTGRES_HOST=localhost` 
+6. Start the development server
 ```bash
 poetry run python src/manage.py runserver
 ```
