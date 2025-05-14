@@ -41,6 +41,16 @@ Install project dependencies
 poetry install
 ```
 
+Before making any commits, run the following command to set up the pre-commit hooks:
+```bash
+pre-commit install
+```
+
+To test pre-commit hooks without a commit, use
+```bash
+poetry run pre-commit run --all-files
+```
+
 ### 🐳 Running with Docker
 
 To start the app using Docker:
