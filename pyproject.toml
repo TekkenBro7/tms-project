@@ -15,7 +15,9 @@ dependencies = [
     "redis (>=6.0.0,<7.0.0)",
     "djangorestframework (>=3.16.0,<4.0.0)",
     "django-redis (>=5.4.0,<6.0.0)",
-    "packaging (>=25.0,<26.0)"
+    "packaging (>=25.0,<26.0)",
+    "pillow (>=11.2.1,<12.0.0)",
+    "chardet (>=5.2.0,<6.0.0)"
 ]
 
 

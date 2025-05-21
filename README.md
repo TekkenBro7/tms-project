@@ -57,7 +57,7 @@ To start the app using Docker:
 ```bash
 docker-compose up --build
 ```
-И посмотрите чтобы в env файле было указано `POSTGRES_HOST=db`
+And make sure that the `env` file states `POSTGRES_HOST=db`
 
 - Django will run on `http://localhost:8000`
 - PostgreSQL is available at port `5432`
