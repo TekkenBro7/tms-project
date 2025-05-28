@@ -6,6 +6,7 @@ The Task Management System (TMS) is a REST API built with Django and Django REST
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-blue)
 ![Redis](https://img.shields.io/badge/Redis-8-red)
 ![Docker](https://img.shields.io/badge/Docker-✓-blue)
+![React](https://img.shields.io/badge/React-18-blue)
 
 ## 📦 Tech Stack
 
@@ -15,6 +16,7 @@ The Task Management System (TMS) is a REST API built with Django and Django REST
 - Docker
 - Poetry (for dependency management)
 - `django-environ` (for `.env` variables)
+- React
 
 ## 🚀 Quick Start
 
@@ -79,4 +81,8 @@ poetry run python src/manage.py createsuperuser
 6. Start the development server
 ```bash
 poetry run python src/manage.py runserver
+```
+7. If you want to run both the frontend and the backend (also check README.md in frontend folder
+```bash
+poetry run python start.py 
 ```
