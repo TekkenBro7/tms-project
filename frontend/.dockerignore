@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+
+# Compiled files
+build/
+dist/
+
+# Tests
+__tests__/
+*.test.js
+*.test.jsx
+*.spec.js
+*.spec.jsx
+
+# Configuration files
+*.log
+.env
+.env.local
+.env.development
+.env.production
+.env*.local
+
+# files IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# git
+.git
+.gitignore
+
+# else
+README.md
+LICENSE
+yarn.lock
+package-lock.json
