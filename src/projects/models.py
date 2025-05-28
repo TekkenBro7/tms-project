@@ -6,7 +6,6 @@ from django.utils import timezone
 class Project(models.Model):
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField(blank=True)
-    deadline = models.DateField(null=True, blank=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="owned_projects")
     members = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="projects", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
