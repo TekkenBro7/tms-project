@@ -24,6 +24,10 @@ class Project(models.Model):
 class StatusChoices(models.TextChoices):
     TODO = "todo", "To Do"
     IN_PROGRESS = "in_progress", "In Progress"
+    IN_REVIEW = "in_review", "In Review"
+    IN_QA = "in_qa", "In QA"
+    REJECTED = "rejected", "Rejected"
+    CANCELED = "canceled", "Canceled"
     DONE = "done", "Done"
 
 

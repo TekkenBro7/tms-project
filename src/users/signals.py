@@ -4,7 +4,7 @@ import os
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
-from .models import User
+from users.models import User
 
 logger = logging.getLogger(__name__)
 

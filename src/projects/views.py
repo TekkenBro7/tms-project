@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 
-from .models import Project, Subtask, Task
-from .serializers import (
+from projects.models import Project, Subtask, Task
+from projects.serializers import (
     ProjectListSerializer,
     ProjectSerializer,
     SubtaskListSerializer,

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Project, StatusChoices, Subtask, Task
+from projects.models import Project, StatusChoices, Subtask, Task
 
 
 class SubtaskSerializer(serializers.ModelSerializer):
@@ -10,7 +10,7 @@ class SubtaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subtask
         fields = "__all__"
-        read_only_fields = ("created_at", "updated_at", "completed_at")
+        read_only_fields = ["id", "created_at", "updated_at", "completed_at"]
 
 
 class SubtaskListSerializer(serializers.ModelSerializer):
@@ -19,6 +19,7 @@ class SubtaskListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subtask
         fields = ["id", "title", "status", "status_display", "deadline"]
+        read_only_fields = ["id"]
 
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -31,7 +32,7 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = "__all__"
-        read_only_fields = ("created_at", "updated_at", "completed_at")
+        read_only_fields = ["id", "created_at", "updated_at", "completed_at"]
 
 
 class TaskListSerializer(serializers.ModelSerializer):
@@ -52,7 +53,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = "__all__"
-        read_only_fields = ("created_at", "updated_at")
+        read_only_fields = ["id", "created_at", "updated_at"]
 
     def get_members_count(self, obj):
         return obj.members.count()
@@ -69,3 +70,4 @@ class ProjectListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ["id", "name", "description"]
+        read_only_fields = ["id"]
