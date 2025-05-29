@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import UserService from '../services/userService';
-import UsersTable from '../components/users/UsersTable';
+import UserService from '../../services/userService';
+import UsersTable from '../../components/users/UsersTable';
 
 export default function AdminUsersPage() {
     const [users, setUsers] = useState([]);

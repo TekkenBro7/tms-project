@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import taskService from '../services/taskService';
-import userService from '../services/userService';
-import projectService from '../services/projectService';
-import TaskForm from '../components/tasks/TaskForm';
-import ProjectTabs from '../components/tasks/ProjectTabs';
-import TasksTable from '../components/tasks/TasksTable';
+import taskService from '../../services/taskService';
+import userService from '../../services/userService';
+import projectService from '../../services/projectService';
+import TaskForm from '../../components/tasks/TaskForm';
+import ProjectTabs from '../../components/tasks/ProjectTabs';
+import TasksTable from '../../components/tasks/TasksTable';
+import { PlusIcon } from '@heroicons/react/outline';
 
 const getLocalDateString = () => {
     const today = new Date();
-    today.setMinutes(today.getMinutes() - today.getTimezoneOffset()); // учёт часового пояса
+    today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
     return today.toISOString().split('T')[0];
 };
 
@@ -26,6 +27,7 @@ const TaskAdminPage = () => {
         deadline: ''
     });
     const [editId, setEditId] = useState(null);
+    const [isCreating, setIsCreating] = useState(false);
     const [loading, setLoading] = useState({
         tasks: true,
         details: false
@@ -199,6 +201,18 @@ const TaskAdminPage = () => {
             deadline: ''
         });
         setEditId(null);
+        setIsCreating(false);
+    };
+
+    const startCreating = () => {
+        resetForm();
+        setIsCreating(true);
+        if (activeProjectTab) {
+            setFormData(prev => ({
+                ...prev,
+                project: activeProjectTab
+            }));
+        }
     };
 
     const handleEdit = async (task) => {
@@ -262,19 +276,31 @@ const TaskAdminPage = () => {
         <div className="container mx-auto px-4 py-8">
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-bold text-gray-800">Task Management</h1>
+                {!isCreating && !editId && (
+                    <button
+                        onClick={startCreating}
+                        className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white px-4 py-2 rounded shadow-lg hover:from-indigo-500 hover:via-purple-500 hover:to-pink-500 flex items-center"
+                    >
+                        <PlusIcon className="h-5 w-5 mr-2" />
+                        Create Task
+                    </button>
+                )}
             </div>
 
-            <TaskForm
-                formData={formData}
-                editId={editId}
-                statusOptions={statusOptions}
-                priorityOptions={priorityOptions}
-                users={users}
-                projects={projects}
-                handleInput={handleInput}
-                handleDateChange={handleDateChange}
-                handleSubmit={handleSubmit}
-            />
+            {(isCreating || editId) && (
+                <TaskForm
+                    formData={formData}
+                    editId={editId}
+                    statusOptions={statusOptions}
+                    priorityOptions={priorityOptions}
+                    users={users}
+                    projects={projects}
+                    handleInput={handleInput}
+                    handleDateChange={handleDateChange}
+                    handleSubmit={handleSubmit}
+                    onCancel={resetForm}
+                />
+            )}
 
             <ProjectTabs
                 projects={projects}

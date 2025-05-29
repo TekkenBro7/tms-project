@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import ProjectService from "../services/projectService";
-import userService from "../services/userService";
-import ProjectForm from "../components/projects/ProjectForm";
-import ProjectsTable from "../components/projects/ProjectTable";
+import ProjectService from "../../services/projectService";
+import userService from "../../services/userService";
+import ProjectForm from "../../components/projects/ProjectForm";
+import ProjectsTable from "../../components/projects/ProjectTable";
 
 const ProjectAdminPage = () => {
     const [projects, setProjects] = useState([]);
