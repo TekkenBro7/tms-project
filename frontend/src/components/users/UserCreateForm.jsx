@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import UserService from '../services/userService';
+import UserService from '../../services/userService';
 
 export default function UserCreateForm() {
     const [formData, setFormData] = useState({

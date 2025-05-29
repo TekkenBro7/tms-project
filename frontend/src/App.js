@@ -4,9 +4,10 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import AdminLayout from "./components/AdminLayout";
 import AdminUsersPage from "./pages/UserAdminPage";
-import UserCreateForm from "./components/UserCreateForm";
-import UserEditForm from "./components/UserEditForm";
+import UserCreateForm from "./components/users/UserCreateForm";
+import UserEditForm from "./components/users/UserEditForm";
 import ProjectAdminPage from "./pages/ProjectAdminPage";
+import TaskAdminPage from "./pages/TaskAdminPage";
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
               <Route path="users/create" element={<UserCreateForm />} />
               <Route path="/admin/users/edit/:id" element={<UserEditForm />} />
               <Route path="projects" element={<ProjectAdminPage />} />
+              <Route path="tasks" element={<TaskAdminPage />} />
             </Route>
           </Routes>
         </main>
