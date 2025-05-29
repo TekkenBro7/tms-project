@@ -11,12 +11,6 @@ export default function Navbar() {
                     <Link to="/" className="hover:underline hover:text-indigo-200 transition-colors">
                         Home
                     </Link>
-                    <Link to="/projects" className="hover:underline hover:text-indigo-200 transition-colors">
-                        Projects
-                    </Link>
-                    <Link to="/tasks" className="hover:underline hover:text-indigo-200 transition-colors">
-                        Tasks
-                    </Link>
                     <Link to="/profile" className="hover:underline hover:text-indigo-200 transition-colors">
                         Profile
                     </Link>

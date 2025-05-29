@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer = () => {
     return (
-        <footer className="mt-auto bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white px-10 py-12">
+        <footer className="mt-auto bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white px-5 py-7">
             <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
                 
                 <div>
