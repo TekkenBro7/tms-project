@@ -33,10 +33,6 @@ class UserSerializer(serializers.ModelSerializer):
                         logger.info(f"Old avatar deleted for user {instance.username}: {old_avatar_path}")
                     except Exception as e:
                         logger.error(f"Failed to delete old avatar for user {instance.username}: {e}")
-            if not new_avatar:
-                instance.avatar = None
-                instance.save()
-                validated_data["avatar"] = None
         else:
             validated_data.pop("avatar", None)
 

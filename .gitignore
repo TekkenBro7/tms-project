@@ -176,3 +176,6 @@ cython_debug/
 
 # Media content
 media/
+
+# React
+node_modules/
