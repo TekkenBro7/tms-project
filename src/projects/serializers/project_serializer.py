@@ -19,11 +19,11 @@ class ProjectSerializer(serializers.ModelSerializer):
         return obj.members.count()
 
     def get_progress(self, obj):
-        total = obj.tasks.count()
-        if total == 0:
+        tasks = obj.tasks.all()
+        if not tasks.exists():
             return 0
-        completed = obj.tasks.all().filter(status=StatusChoices.DONE).count()
-        return round(completed / total * 100)
+        completed = tasks.filter(status=StatusChoices.DONE).count()
+        return round(completed / tasks.count() * 100)
 
 
 class ProjectListSerializer(serializers.ModelSerializer):
