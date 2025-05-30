@@ -22,17 +22,18 @@ DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
 
-
 # Application definition
 
 INSTALLED_APPS = [
+    "users",
+    "projects",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "test_app",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
@@ -89,6 +90,8 @@ CACHES = {
     }
 }
 
+AUTH_USER_MODEL = "users.User"
+
 # Password validation
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -106,7 +109,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
+MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "/media/"
 
 LANGUAGE_CODE = "en-us"
 
