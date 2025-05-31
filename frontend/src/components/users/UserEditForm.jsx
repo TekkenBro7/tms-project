@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import UserService from '../../services/userService';
+import UserService from '../../services/UserService';
 
 export default function UserEditForm() {
     const { id } = useParams();

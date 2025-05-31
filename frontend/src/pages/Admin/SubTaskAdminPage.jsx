@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { PlusIcon } from '@heroicons/react/outline';
-import subtaskService from '../../services/subtaskService';
-import userService from '../../services/userService';
-import taskService from '../../services/taskService';
+import subtaskService from '../../services/SubtaskService';
+import userService from '../../services/UserService';
+import taskService from '../../services/TaskService';
 import TaskTabs from '../../components/subtasks/TaskTabs';
 import SubtaskForm from '../../components/subtasks/SubtaskForm';
 import SubtasksTable from '../../components/subtasks/SubtasksTable';
