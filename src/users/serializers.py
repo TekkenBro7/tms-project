@@ -54,3 +54,17 @@ class UserSerializer(serializers.ModelSerializer):
             "password",
         ]
         read_only_fields = ["id"]
+
+
+class UserDetailSerializer(UserSerializer):
+    class Meta(UserSerializer.Meta):
+        fields = UserSerializer.Meta.fields + [
+            "is_superuser",
+            "last_login",
+            "date_joined",
+        ]
+        read_only_fields = UserSerializer.Meta.read_only_fields + [
+            "is_superuser",
+            "last_login",
+            "date_joined",
+        ]
