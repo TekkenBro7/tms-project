@@ -17,12 +17,6 @@ export default function LoginPage() {
     const [cookies, setCookie, removeCookie] = useCookies(['refresh_token']);
     const { login } = useContext(AuthContext);
 
-    useEffect(() => {
-        if (localStorage.getItem('access_token')) {
-            navigate('/');
-        }
-    }, [navigate]);
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -45,9 +39,7 @@ export default function LoginPage() {
             const from = location.state?.from?.pathname || '/';
             navigate(from);
         } catch (err) {
-            console.error('Full error object:', err);
-            console.error('Error response:', err.response);
-            console.error('Login error:', err);
+            console.error('Login error:', err.response?.data || err.message);
             setError(err.response?.data?.detail || 'Invalid username or password');
         } finally {
             setIsSubmitting(false);
