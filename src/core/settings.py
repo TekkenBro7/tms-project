@@ -10,6 +10,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 env = environ.Env(
     DEBUG=(bool, False),
     POSTGRES_PORT=(int, 5432),
+    JWT_ACCESS_TOKEN_LIFETIME_DAYS=(int, 1),
+    JWT_REFRESH_TOKEN_LIFETIME_DAYS=(int, 14),
+    JWT_ROTATE_REFRESH_TOKENS=(bool, True),
+    JWT_BLACKLIST_AFTER_ROTATION=(bool, True),
+    JWT_UPDATE_LAST_LOGIN=(bool, True),
 )
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"), overwrite=True)
 
@@ -48,11 +53,11 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
-    "ROTATE_REFRESH_TOKENS": True,
-    "BLACKLIST_AFTER_ROTATION": True,
-    "UPDATE_LAST_LOGIN": True,
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=env("JWT_ACCESS_TOKEN_LIFETIME_DAYS")),
+    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=env("JWT_REFRESH_TOKEN_LIFETIME_DAYS")),
+    "ROTATE_REFRESH_TOKENS": env("JWT_ROTATE_REFRESH_TOKENS"),
+    "BLACKLIST_AFTER_ROTATION": env("JWT_BLACKLIST_AFTER_ROTATION"),
+    "UPDATE_LAST_LOGIN": env("JWT_UPDATE_LAST_LOGIN"),
 }
 
 MIDDLEWARE = [
