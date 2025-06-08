@@ -13,16 +13,8 @@ export default function HomePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Проверяем авторизацию пользователя
         const userResponse = await authService.getCurrentUser();
-        
-        if (!userResponse.data) {
-          setLoading(false);
-          return;
-        }
-        
         setUser(userResponse.data);
-        
         const projectsResponse = await projectService.getAll();
         const userProjects = projectsResponse.data.filter(project => 
           project.members.includes(userResponse.data.id) || 
