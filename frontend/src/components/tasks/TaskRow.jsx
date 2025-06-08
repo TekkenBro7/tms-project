@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronDownIcon, ChevronRightIcon, PencilIcon, TrashIcon } from '@heroicons/react/outline';
+import { ChevronDownIcon, ClockIcon, ChevronRightIcon, PencilIcon, TrashIcon } from '@heroicons/react/outline';
 
 const TaskRow = ({
     task,
@@ -12,10 +12,24 @@ const TaskRow = ({
     handleDelete,
     children
 }) => {
+
+    const isOverdue = (deadline) => {
+        if (!deadline) return false;
+        
+        const deadlineDate = new Date(deadline);
+        const today = new Date();
+        
+        deadlineDate.setHours(23, 59, 59, 999);
+        
+        return deadlineDate < today;
+    };
+
+    const isTaskOverdue = task.deadline && isOverdue(task.deadline) && task.status !== 'done';
+    
     return (
         <>
         <tr 
-            className="hover:bg-gray-50 cursor-pointer"
+            className={`hover:bg-gray-50 cursor-pointer ${isTaskOverdue ? 'bg-red-50' : ''}`}
             onClick={() => toggleRow(task.id)}
         >
             <td className="px-6 py-4 whitespace-nowrap">
@@ -26,7 +40,7 @@ const TaskRow = ({
                     <ChevronRightIcon className="h-5 w-5 mr-2 text-gray-400" />
                     )}
                     <div>
-                    <div className="text-sm font-medium text-gray-900">{task.title}</div>
+                    <div className={`text-sm font-medium ${isTaskOverdue ? 'text-red-800' : 'text-gray-900'}`}>{task.title}</div>
                     <div className="text-sm text-gray-500">ID: {task.id}</div>
                     </div>
                 </div>
@@ -49,10 +63,18 @@ const TaskRow = ({
                     {priorityOptions.find(p => p.value === task.priority)?.label || task.priority}
                 </span>
             </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <td className={`px-6 py-4 whitespace-nowrap text-sm ${isTaskOverdue ? 'text-red-600 font-semibold' : 'text-gray-500'}`}>
                 {task.deadline ? new Date(task.deadline).toLocaleDateString() : 'No deadline'}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                
+                {isTaskOverdue && (
+                    <span className="ml-2 flex items-center text-xs">
+                        <ClockIcon className="h-3 w-3 mr-1" />
+                        Overdue
+                    </span>
+                )}
+                
+            </td>
+            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                 <button
                     onClick={(e) => {
                     e.stopPropagation();
@@ -74,7 +96,7 @@ const TaskRow = ({
             </td>
         </tr>
         {expanded && (
-            <tr className="bg-gray-50">
+            <tr className={`bg-gray-50 ${isTaskOverdue ? 'bg-red-50' : ''}`}>
             <td colSpan="5" className="px-6 py-4">
                 {children}
             </td>
