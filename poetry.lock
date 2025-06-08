@@ -1257,4 +1257,8 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4"
+<<<<<<< HEAD
 content-hash = "b5916a5ad97014266212e26d6bc1acff96bd2402c2c9f56aa1e1d7c74fa46e61"
+=======
+content-hash = "100c965d449ab544303c3e9f04c83cf804b5d406599fb85d5dde629950b74695"
+>>>>>>> c89f5c9 (Fix problems and add task from each users)
