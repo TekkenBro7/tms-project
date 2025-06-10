@@ -1,9 +1,9 @@
 import api from '../api/apiClient';
 import { Cookies } from 'react-cookie';
+import { AUTH_URL, USERS_URL } from '../constants/ApiUrls';
+import { HTTP_401_UNAUTHORIZED } from '../constants/HttpStatus';
 
 const cookies = new Cookies();
-const AUTH_URL = '/auth/';
-const USERS_URL = '/users/';
 
 const authService = {
     register: (userData) => api.post(USERS_URL, userData),
@@ -68,7 +68,7 @@ const authService = {
             localStorage.setItem('user', JSON.stringify(response.data));
             return response;
         } catch (error) {
-            if (error.response?.status === 401) {
+            if (error.response?.status === HTTP_401_UNAUTHORIZED) {
                 try {
                     const newToken = await authService.refreshToken();
                     const response = await api.get(`${USERS_URL}me/`, {
@@ -96,7 +96,7 @@ const authService = {
                 });
                 return true;
             } catch (verifyError) {
-                if (verifyError.response?.status === 401) {
+                if (verifyError.response?.status === HTTP_401_UNAUTHORIZED) {
                     await authService.refreshToken();
                     return true;
                 }

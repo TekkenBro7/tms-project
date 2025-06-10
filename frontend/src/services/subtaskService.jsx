@@ -1,6 +1,5 @@
 import api from '../api/apiClient';
-
-const SUBTASKS_URL = '/subtasks/';
+import { SUBTASKS_URL } from '../constants/ApiUrls';
 
 const subtaskService = {
     getAll: () => api.get(SUBTASKS_URL),
