@@ -6,7 +6,11 @@ from django.dispatch import receiver
 from django.utils.timezone import localtime
 
 from projects.models import Subtask
+<<<<<<< HEAD
 from projects.tasks import send_subtask_deadline_notification, send_subtask_update_notification
+=======
+from projects.tasks import send_subtask_deadline_notification
+>>>>>>> 73cc6e3 (Added notification before deadline of subtask)
 
 logger = logging.getLogger(__name__)
 

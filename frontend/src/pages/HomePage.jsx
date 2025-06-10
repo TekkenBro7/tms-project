@@ -13,8 +13,18 @@ export default function HomePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Проверяем авторизацию пользователя
         const userResponse = await authService.getCurrentUser();
+        
+        if (!userResponse.data) {
+          // Если пользователь не авторизован, прерываем загрузку
+          setLoading(false);
+          return;
+        }
+        
         setUser(userResponse.data);
+        
+        // Загружаем проекты только для авторизованного пользователя
         const projectsResponse = await projectService.getAll();
         const userProjects = projectsResponse.data.filter(project => 
           project.members.includes(userResponse.data.id) || 
