@@ -3,13 +3,14 @@ import random
 from datetime import datetime, timedelta
 
 import django
-from django.contrib.auth import get_user_model
-from faker import Faker
-
-from projects.models import Project, Subtask, Task
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 django.setup()
+
+from django.contrib.auth import get_user_model  # noqa: E402
+from faker import Faker  # noqa: E402
+
+from projects.models import Project, Subtask, Task  # noqa: E402
 
 User = get_user_model()
 fake = Faker()
