@@ -1,3 +1,4 @@
+import logging
 import os
 import random
 from datetime import datetime, timedelta
@@ -14,9 +15,11 @@ django.setup()
 User = get_user_model()
 fake = Faker()
 
+logger = logging.getLogger(__name__)
+
 
 def delete_old_data():
-    print("Deleting old data...")
+    logger.info("Deleting old data...")
     Subtask.objects.all().delete()
     Task.objects.all().delete()
     Project.objects.all().delete()
@@ -24,11 +27,11 @@ def delete_old_data():
 
 
 def create_users():
-    print("Creating users...")
+    logger.info("Creating users...")
 
     for i in range(1, 6):
         User.objects.create_user(
-            username=f"user{i}",  # fake.user_name()
+            username=f"user{i}",
             email=fake.email(),
             password=f"password{i}",
             first_name=fake.first_name(),
@@ -40,7 +43,7 @@ def create_users():
 
 
 def create_projects(users):
-    print("Creating projects...")
+    logger.info("Creating projects...")
     projects = []
 
     project_data = [
@@ -86,7 +89,7 @@ def create_projects(users):
 
 
 def create_tasks(projects, users):
-    print("Creating tasks...")
+    logger.info("Creating tasks...")
     tasks = []
     priority_choices = ["low", "medium", "high", "urgent"]
 
@@ -137,7 +140,7 @@ def create_tasks(projects, users):
 
 
 def create_subtasks(tasks, users):
-    print("Creating subtasks...")
+    logger.info("Creating subtasks...")
 
     default_subtasks = [
         ("Initial research", "done"),
@@ -194,4 +197,4 @@ if __name__ == "__main__":
     projects = create_projects(users)
     tasks = create_tasks(projects, users)
     create_subtasks(tasks, users)
-    print("Database populated with realistic web development data!")
+    logger.info("Database populated with realistic web development data!")
