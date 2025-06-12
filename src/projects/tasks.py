@@ -1,12 +1,10 @@
-import logging
-
 from celery import shared_task
 from django.conf import settings
 from django.core.mail import send_mail
 
+from core.logging import logger
+from projects.email_templates import SubtaskEmailTemplates
 from projects.models import Subtask
-
-logger = logging.getLogger(__name__)
 
 
 @shared_task(bind=True)
@@ -19,18 +17,17 @@ def send_subtask_deadline_notification(self, subtask_id):
 
         logger.info(f"Sending email for subtask {subtask_id} to {subtask.assignee.email}")
 
-        send_mail(
-            subject=f'Reminder: Subtask "{subtask.title}" is due tomorrow!',
-            message=f"""Subtask: {subtask.title}
-                        Task: {subtask.task.title}
-                        Project: {subtask.task.project.name}
-                        Deadline: {subtask.deadline.strftime("%Y-%m-%d %H:%M")}
+        email_content = SubtaskEmailTemplates.render_deadline_email(subtask)
+        logger.info(email_content)
 
-                        Please make sure to complete it on time.""",
+        send_mail(
+            subject=email_content["subject"],
+            message=email_content["message"],
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[subtask.assignee.email],
             fail_silently=False,
         )
+
         logger.info(f"Email sent successfully to {subtask.assignee.email}")
 
     except Exception as e:
@@ -42,40 +39,23 @@ def send_subtask_deadline_notification(self, subtask_id):
 def send_subtask_update_notification(self, subtask_id, is_new=False):
     try:
         subtask = Subtask.objects.get(id=subtask_id)
+
         if not subtask.assignee or not subtask.assignee.email:
             logger.warning(f"No assignee for subtask {subtask_id}")
             return
 
         logger.info(f"Sending update email for subtask {subtask_id} to {subtask.assignee.email}")
 
-        if is_new:
-            subject = f'New subtask assigned: "{subtask.title}"'
-            message = f"""You have been assigned a new subtask:
-                        Subtask: {subtask.title}
-                        Task: {subtask.task.title}
-                        Project: {subtask.task.project.name}
-                        Status: {subtask.get_status_display()}
-                        Deadline: {subtask.deadline.strftime("%Y-%m-%d") if subtask.deadline else "Not set"}
-
-                        Please check it in your task list."""
-        else:
-            subject = f'Subtask updated: "{subtask.title}"'
-            message = f"""Your subtask has been updated:
-                        Subtask: {subtask.title}
-                        Task: {subtask.task.title}
-                        Project: {subtask.task.project.name}
-                        New Status: {subtask.get_status_display()}
-                        Deadline: {subtask.deadline.strftime("%Y-%m-%d") if subtask.deadline else "Not set"}
-
-                        Please check the updates."""
+        email_content = SubtaskEmailTemplates.render_update_email(subtask, is_new)
 
         send_mail(
-            subject=subject,
-            message=message,
+            subject=email_content["subject"],
+            message=email_content["message"],
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[subtask.assignee.email],
             fail_silently=False,
         )
+
         logger.info(f"Update email sent successfully to {subtask.assignee.email}")
 
     except Exception as e:
