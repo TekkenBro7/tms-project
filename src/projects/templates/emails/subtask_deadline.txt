@@ -9,7 +9,10 @@ Task: {{ task_title }}
 Project: {{ project_name }}
 Deadline: {{ deadline }}
 
-Please make sure to complete it on time.
+Please complete it on time.
+
+View subtask: {{ task_url }}
 
 ---
-This is an automated notification.
+This is an automated notification from {{ site_name }}.
+© {{ current_year }} {{ site_name }}. All rights reserved.

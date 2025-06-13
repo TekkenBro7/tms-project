@@ -1,8 +1,9 @@
 from celery import shared_task
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
 
 from core.logging import logger
 from projects.models import Subtask
-from projects.services.email_sender import send_subtask_email
 from projects.services.email_templates import SubtaskEmailTemplates
 
 
@@ -15,9 +16,15 @@ def send_subtask_deadline_notification(self, subtask_id):
             return
 
         email_content = SubtaskEmailTemplates.render_deadline_email(subtask)
-        send_subtask_email(
-            recipient_email=subtask.assignee.email, subject=email_content["subject"], message=email_content["message"]
+
+        msg = EmailMultiAlternatives(
+            subject=email_content["subject"],
+            body=email_content["text"],
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[subtask.assignee.email],
         )
+        msg.attach_alternative(email_content["html"], "text/html")
+        msg.send()
 
     except Exception as e:
         logger.error(f"Failed to send email: {str(e)}", exc_info=True)
@@ -33,9 +40,15 @@ def send_subtask_update_notification(self, subtask_id, is_new=False):
             return
 
         email_content = SubtaskEmailTemplates.render_update_email(subtask, is_new)
-        send_subtask_email(
-            recipient_email=subtask.assignee.email, subject=email_content["subject"], message=email_content["message"]
+
+        msg = EmailMultiAlternatives(
+            subject=email_content["subject"],
+            body=email_content["text"],
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[subtask.assignee.email],
         )
+        msg.attach_alternative(email_content["html"], "text/html")
+        msg.send()
 
         logger.info(f"Update email sent successfully to {subtask.assignee.email}")
 
