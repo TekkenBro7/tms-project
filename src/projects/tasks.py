@@ -3,7 +3,7 @@ from celery import shared_task
 from core.logging import logger
 from projects.models import Subtask
 from projects.services.email_templates import SubtaskEmailTemplates
-from projects.services.send_subtask_email import send_email
+
 
 
 @shared_task(bind=True)
@@ -15,12 +15,14 @@ def send_subtask_deadline_notification(self, subtask_id):
             return
 
         email_content = SubtaskEmailTemplates.render_deadline_email(subtask)
-        send_email(
-            recipient_email=subtask.assignee.email,
+
+        msg = EmailMultiAlternatives(
             subject=email_content["subject"],
             text_content=email_content["text"],
             html_content=email_content["html"],
         )
+        msg.attach_alternative(email_content["html"], "text/html")
+        msg.send()
 
     except Exception as e:
         logger.error(f"Failed to send email: {str(e)}", exc_info=True)
@@ -36,6 +38,7 @@ def send_subtask_update_notification(self, subtask_id, is_new=False):
             return
 
         email_content = SubtaskEmailTemplates.render_update_email(subtask, is_new)
+
         send_email(
             recipient_email=subtask.assignee.email,
             subject=email_content["subject"],
