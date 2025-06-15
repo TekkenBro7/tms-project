@@ -1,36 +1,52 @@
 import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import ProjectCard from '../components/home/ProjectCard';
 import authService from '../services/AuthService';
 import projectService from '../services/ProjectService';
 import { useNavigate } from 'react-router-dom';
+import { Skeleton } from '@mui/material';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.5
+    }
+  }
+};
 
 export default function HomePage() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const [viewMode, setViewMode] = useState('grid');
+  const [filterStatus, setFilterStatus] = useState('all')
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Проверяем авторизацию пользователя
         const userResponse = await authService.getCurrentUser();
         
         if (!userResponse.data) {
-<<<<<<< HEAD
-=======
-          // Если пользователь не авторизован, прерываем загрузку
->>>>>>> 73cc6e3 (Added notification before deadline of subtask)
           setLoading(false);
           return;
         }
         
         setUser(userResponse.data);
-        
-<<<<<<< HEAD
-=======
-        // Загружаем проекты только для авторизованного пользователя
->>>>>>> 73cc6e3 (Added notification before deadline of subtask)
+
         const projectsResponse = await projectService.getAll();
         const userProjects = projectsResponse.data.filter(project => 
           project.members.includes(userResponse.data.id) || 
@@ -47,69 +63,145 @@ export default function HomePage() {
     fetchData();
   }, []);
 
+  const filteredProjects = projects.filter(project => {
+    if (filterStatus === 'all') return true;
+    if (filterStatus === 'active') return project.is_active;
+    if (filterStatus === 'inactive') return !project.is_active;
+    return true;
+  });
+
   if (loading) {
     return (
-      <div className="p-8 text-center">
-        <h1 className="text-4xl font-bold text-indigo-700 mb-4">Loading...</h1>
+      <div className="p-8">
+        <div className="max-w-4xl mx-auto space-y-4">
+          {[...Array(3)].map((_, i) => (
+            <Skeleton 
+              key={i} 
+              variant="rounded" 
+              width="100%" 
+              height={120} 
+              animation="wave" 
+            />
+          ))}
+        </div>
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="p-6">
-        <div className="max-w-4xl mx-auto text-center py-12">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50"
+      >
+        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center">
           <h1 className="text-3xl font-bold text-indigo-700 mb-4">
-            Please sign in to view your projects
+            Welcome to TMS Project
           </h1>
-          <p className="text-lg text-gray-600 mb-6">
-            You need to be authenticated to access this content
+          <p className="text-gray-600 mb-6">
+            Please sign in to access your projects and tasks
           </p>
           <button
             onClick={() => navigate('/login')}
-            className="mx-auto w-30 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white py-2 px-4 rounded-md shadow-lg hover:from-indigo-500 hover:via-purple-500 hover:to-pink-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white py-2 px-4 rounded-md shadow-lg hover:from-indigo-500 hover:via-purple-500 hover:to-pink-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
           >
             Sign In
           </button>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="p-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-indigo-700 mb-2">
-            Welcome back, {user.first_name}!
+    <motion.div 
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+      className="p-6 bg-gray-50 min-h-screen"
+    >
+      <div className="max-w-6xl mx-auto">
+        <motion.div variants={itemVariants} className="mb-10">
+          <h1 className="text-4xl font-bold text-gray-800 mb-2">
+            Welcome back, <span className="text-indigo-600">{user.first_name}</span>!
           </h1>
-          <p className="text-lg text-gray-600">
-            Here are your active projects and tasks
+          <p className="text-lg text-gray-500">
+            Here's what needs your attention today
           </p>
+        </motion.div>
+
+        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-between items-center bg-white rounded-xl shadow-md p-4 mb-6">
+        <div className="flex space-x-2 mb-4 sm:mb-0">
+          <button
+            onClick={() => setViewMode('grid')}
+            className={`p-2 rounded-md ${viewMode === 'grid' ? 'bg-indigo-100 text-indigo-700' : 'text-gray-500 hover:bg-gray-100'}`}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+            </svg>
+          </button>
+          <button
+            onClick={() => setViewMode('list')}
+            className={`p-2 rounded-md ${viewMode === 'list' ? 'bg-indigo-100 text-indigo-700' : 'text-gray-500 hover:bg-gray-100'}`}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
         </div>
+
+        <div className="flex space-x-2">
+          <button
+            onClick={() => setFilterStatus('all')}
+            className={`px-4 py-2 text-sm rounded-md ${filterStatus === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+          >
+            All
+          </button>
+          <button
+            onClick={() => setFilterStatus('active')}
+            className={`px-4 py-2 text-sm rounded-md ${filterStatus === 'active' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+          >
+            Active
+          </button>
+          <button
+            onClick={() => setFilterStatus('inactive')}
+            className={`px-4 py-2 text-sm rounded-md ${filterStatus === 'inactive' ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+          >
+            Inactive
+          </button>
+        </div>
+      </motion.div>
+
         
-        {projects.length > 0 ? (
-          <div className="space-y-4">
-            {projects.map(project => (
-              <ProjectCard 
+        {filteredProjects.length > 0 ? (
+          <motion.div 
+            variants={containerVariants} 
+            className={viewMode === 'grid' ? 'grid grid-cols-1 lg:grid-cols-2 gap-6' : 'space-y-4'}
+          >
+            {filteredProjects.map((project, index) => (
+              <motion.div 
                 key={project.id} 
-                project={project} 
-                currentUser={user} 
-              />
+                variants={itemVariants}
+                custom={index}
+              >
+                <ProjectCard 
+                  project={project} 
+                  currentUser={user} 
+                />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         ) : (
-          <div className="text-center py-8">
-            <p className="text-gray-500 mb-4">You don't have any projects yet</p>
-            <button
-              onClick={() => navigate('/projects/new')}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
-            >
-              Create Your First Project
-            </button>
-          </div>
+          <motion.div 
+            variants={itemVariants}
+            className="bg-white rounded-xl shadow-md p-8 text-center"
+          >
+            <h3 className="text-xl font-medium text-gray-800 mb-2">
+              No projects yet
+            </h3>
+          </motion.div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
