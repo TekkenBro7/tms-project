@@ -13,34 +13,37 @@ import RegisterPage from "./pages/Auth/RegisterPage";
 import LoginPage from "./pages/Auth/LoginPage";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import GuestRoute from "./utils/GuestRoute";
-import { AuthProvider } from "./utils/AuthContext";
+import TaskDetailPage from './pages/TaskDetailPage';
 
 export default function App() {
   return (
-      <Router>
-    <AuthProvider>
-        <div className="flex flex-col min-h-screen">
-          <Navbar />
-          <main className="flex-grow">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route element={<GuestRoute />}>
-                <Route path="/register" element={<RegisterPage />} />
-                <Route path="/login" element={<LoginPage />} />
-              </Route>
-              <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
-                <Route path="users" element={<AdminUsersPage />} />
-                <Route path="users/create" element={<UserCreateForm />} />
-                <Route path="/admin/users/edit/:id" element={<UserEditForm />} />
-                <Route path="projects" element={<ProjectAdminPage />} />
-                <Route path="tasks" element={<TaskAdminPage />} />
-                <Route path="subtasks" element={<SubtaskAdminPage />} />
-              </Route>
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-    </AuthProvider>
-      </Router>
+    <Router>
+      <div className="flex flex-col min-h-screen">
+        <Navbar />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route element={<GuestRoute />}>
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/login" element={<LoginPage />} />
+            </Route>
+
+            <Route element={<ProtectedRoute />}>
+              <Route path="/tasks/:id" element={ <TaskDetailPage/> } />
+            </Route>
+
+            <Route path="/admin" element={<ProtectedRoute> <AdminLayout /> </ProtectedRoute> }>
+              <Route path="users" element={<AdminUsersPage />} />
+              <Route path="users/create" element={<UserCreateForm />} />
+              <Route path="/admin/users/edit/:id" element={<UserEditForm />} />
+              <Route path="projects" element={<ProjectAdminPage />} />
+              <Route path="tasks" element={<TaskAdminPage />} />
+              <Route path="subtasks" element={<SubtaskAdminPage />} />
+            </Route>
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </Router>
   );
 }

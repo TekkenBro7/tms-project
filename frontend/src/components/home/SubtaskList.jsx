@@ -7,7 +7,10 @@ const statusOrder = {
   'todo': 1,
   'in_progress': 2,
   'in_review': 3,
-  'done': 4
+  'in_qa': 4,
+  'rejected': 5,
+  'canceled': 6,
+  'done': 7
 };
 
 const SubtaskList = ({ subtasks, currentUser, sortConfig, setSortConfig, onSubtaskClick }) => {

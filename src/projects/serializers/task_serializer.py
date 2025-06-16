@@ -10,6 +10,7 @@ class TaskSerializer(serializers.ModelSerializer):
     priority_display = serializers.CharField(source="get_priority_display", read_only=True)
     author_name = serializers.CharField(source="author.get_full_name", read_only=True)
     assignee_name = serializers.CharField(source="assignee.get_full_name", read_only=True)
+    project_name = serializers.CharField(source="project.name", read_only=True)
 
     class Meta:
         model = Task
