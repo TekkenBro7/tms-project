@@ -14,6 +14,7 @@ import LoginPage from "./pages/Auth/LoginPage";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import GuestRoute from "./utils/GuestRoute";
 import TaskDetailPage from './pages/TaskDetailPage';
+import SubtaskDetailPage from "./pages/SubtaskDetailPage";
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
 
             <Route element={<ProtectedRoute />}>
               <Route path="/tasks/:id" element={ <TaskDetailPage/> } />
+              <Route path="/subtasks/:id" element={ <SubtaskDetailPage/> } />
             </Route>
 
             <Route path="/admin" element={<ProtectedRoute> <AdminLayout /> </ProtectedRoute> }>

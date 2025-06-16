@@ -40,6 +40,7 @@ const SubtaskModal = ({ subtask, currentUser, onClose, onSave }) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+                onClick={onClose}
             >
                 <motion.div
                     key="modal"
@@ -47,6 +48,7 @@ const SubtaskModal = ({ subtask, currentUser, onClose, onSave }) => {
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.95, opacity: 0 }}
                     className="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 p-6"
+                    onClick={(e) => e.stopPropagation()}
                 >
                     <div className="flex justify-between items-center mb-4">
                         <h3 className="text-xl font-semibold text-gray-800">
@@ -126,12 +128,13 @@ const SubtaskModal = ({ subtask, currentUser, onClose, onSave }) => {
                             </button>
                             {canEdit && (
                                 <button
-                                    type="submit"
-                                    className="flex items-center px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow"
-                                >
-                                    <CheckCircleIcon className="h-5 w-5 mr-2" />
-                                    Save
-                                </button>
+    type="submit"
+    className="flex items-center justify-center px-6 py-2 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white rounded-lg shadow-lg hover:from-indigo-500 hover:via-purple-500 hover:to-pink-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+>
+    <CheckCircleIcon className="h-5 w-5 mr-2" />
+    Save
+</button>
+
                             )}
                         </div>
                     </form>
