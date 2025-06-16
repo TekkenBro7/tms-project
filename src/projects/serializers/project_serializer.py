@@ -27,7 +27,10 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class ProjectListSerializer(serializers.ModelSerializer):
+    members = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    is_active = serializers.BooleanField()
+
     class Meta:
         model = Project
-        fields = ["id", "name", "description"]
+        fields = ["id", "name", "description", "members", "is_active"]
         read_only_fields = ["id"]
