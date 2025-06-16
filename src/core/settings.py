@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -9,6 +10,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 env = environ.Env(
     DEBUG=(bool, False),
     POSTGRES_PORT=(int, 5432),
+    JWT_ACCESS_TOKEN_LIFETIME_SECONDS=(int, 1000),
+    JWT_REFRESH_TOKEN_LIFETIME_SECONDS=(int, 1000000),
+    JWT_ROTATE_REFRESH_TOKENS=(bool, True),
+    JWT_BLACKLIST_AFTER_ROTATION=(bool, True),
+    JWT_UPDATE_LAST_LOGIN=(bool, True),
 )
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"), overwrite=True)
 
@@ -37,7 +43,22 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "corsheaders",
+    "rest_framework_simplejwt",
+    "rest_framework_simplejwt.token_blacklist",
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=env("JWT_ACCESS_TOKEN_LIFETIME_SECONDS")),
+    "REFRESH_TOKEN_LIFETIME": timedelta(seconds=env("JWT_REFRESH_TOKEN_LIFETIME_SECONDS")),
+    "ROTATE_REFRESH_TOKENS": env("JWT_ROTATE_REFRESH_TOKENS"),
+    "BLACKLIST_AFTER_ROTATION": env("JWT_BLACKLIST_AFTER_ROTATION"),
+    "UPDATE_LAST_LOGIN": env("JWT_UPDATE_LAST_LOGIN"),
+}
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",

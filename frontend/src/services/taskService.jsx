@@ -1,6 +1,5 @@
 import api from '../api/apiClient';
-
-const TASKS_URL = '/tasks/';
+import { TASKS_URL } from '../constants/ApiUrls';
 
 const taskService = {
     getAll: () => api.get(TASKS_URL),

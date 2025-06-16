@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import taskService from '../../services/taskService';
-import userService from '../../services/userService';
-import projectService from '../../services/projectService';
+import taskService from '../../services/TaskService';
+import userService from '../../services/UserService';
+import projectService from '../../services/ProjectService';
 import TaskForm from '../../components/tasks/TaskForm';
 import ProjectTabs from '../../components/tasks/ProjectTabs';
 import TasksTable from '../../components/tasks/TasksTable';

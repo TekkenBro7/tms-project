@@ -1,6 +1,5 @@
 import api from '../api/apiClient';
-
-const PROJECTS_URL = '/projects/';
+import { PROJECTS_URL } from '../constants/ApiUrls';
 
 const projectService = {
     getAll: () => api.get(PROJECTS_URL),

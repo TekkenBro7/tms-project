@@ -1,6 +1,5 @@
 import api from '../api/apiClient';
-
-const USERS_URL = '/users/';
+import { USERS_URL } from '../constants/ApiUrls';
 
 const userService = {
     getAll: () => api.get(USERS_URL),
