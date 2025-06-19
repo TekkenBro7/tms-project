@@ -10,15 +10,16 @@ import {
 import subtaskService from '../services/SubtaskService';
 import { AuthContext } from '../utils/AuthContext';
 import SubtaskModal from '../components/home/SubtaskModal';
+import { TaskStatus } from '../../constants/enums';
 
 const statusColors = {
-    'todo': 'bg-gray-200 text-gray-800',
-    'in_progress': 'bg-blue-100 text-blue-800',
-    'in_review': 'bg-purple-100 text-purple-800',
-    'in_qa': 'bg-yellow-100 text-yellow-800',
-    'rejected': 'bg-red-100 text-red-800',
-    'canceled': 'bg-gray-100 text-gray-500',
-    'done': 'bg-green-100 text-green-800'
+    [TaskStatus.TODO]: 'bg-gray-200 text-gray-800',
+    [TaskStatus.IN_PROGRESS]: 'bg-blue-100 text-blue-800',
+    [TaskStatus.IN_REVIEW]: 'bg-purple-100 text-purple-800',
+    [TaskStatus.IN_QA]: 'bg-yellow-100 text-yellow-800',
+    [TaskStatus.REJECTED]: 'bg-red-100 text-red-800',
+    [TaskStatus.CANCELED]: 'bg-gray-100 text-gray-500',
+    [TaskStatus.DONE]: 'bg-green-100 text-green-800'
 };
 
 const SubtaskDetailPage = () => {
@@ -50,7 +51,7 @@ const SubtaskDetailPage = () => {
         const deadlineDate = new Date(deadline);
         const today = new Date();
         deadlineDate.setHours(23, 59, 59, 999);
-        return deadlineDate < today && subtask?.status !== 'done';
+        return deadlineDate < today && subtask?.status !== TaskStatus.DONE;
     };
 
     const handleSave = async (updatedData) => {

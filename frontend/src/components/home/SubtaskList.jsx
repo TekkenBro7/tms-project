@@ -11,16 +11,17 @@ import {
     ArrowRightIcon
 } from '@heroicons/react/outline';
 import { useMemo } from 'react';
+import { TaskStatus, SortKey } from '../../constants/enums';  
 
 const statusOrder = {
-    'todo': 1,
-    'in_progress': 2,
-    'in_review': 3,
-    'in_qa': 4,
-    'rejected': 5,
-    'canceled': 6,
-    'done': 7
-};
+    [TaskStatus.TODO]: 1,
+    [TaskStatus.IN_PROGRESS]: 2,
+    [TaskStatus.IN_REVIEW]: 3,
+    [TaskStatus.IN_QA]: 4,
+    [TaskStatus.REJECTED]: 5,
+    [TaskStatus.CANCELED]: 6,
+    [TaskStatus.DONE]: 7
+};  
 
 const SubtaskList = ({ subtasks, currentUser, sortConfig, setSortConfig, onSubtaskClick }) => {
     const navigate = useNavigate();
@@ -29,7 +30,7 @@ const SubtaskList = ({ subtasks, currentUser, sortConfig, setSortConfig, onSubta
         if (!sortConfig.key) return subtasks;
 
         return [...subtasks].sort((a, b) => {
-            if (sortConfig.key === 'status') {
+            if (sortConfig.key === SortKey.STATUS) {
                 const statusA = statusOrder[a.status] || 0;
                 const statusB = statusOrder[b.status] || 0;
                 if (statusA < statusB) {
@@ -41,7 +42,7 @@ const SubtaskList = ({ subtasks, currentUser, sortConfig, setSortConfig, onSubta
                 return 0;
             }
 
-            if (sortConfig.key === 'assignee') {
+            if (sortConfig.key === SortKey.ASSIGNEE) {
                 const isCurrentUserA = a.assignee === currentUser.id;
                 const isCurrentUserB = b.assignee === currentUser.id;
                 if (isCurrentUserA && !isCurrentUserB) {
@@ -53,7 +54,7 @@ const SubtaskList = ({ subtasks, currentUser, sortConfig, setSortConfig, onSubta
                 return 0;
             }
 
-            if (sortConfig.key === 'deadline') {
+            if (sortConfig.key === SortKey.ASSIGNEE) {
                 if (!a.deadline && !b.deadline) return 0;
                 if (!a.deadline) return sortConfig.direction === 'asc' ? 1 : -1;
                 if (!b.deadline) return sortConfig.direction === 'asc' ? -1 : 1;
@@ -143,25 +144,25 @@ const SubtaskList = ({ subtasks, currentUser, sortConfig, setSortConfig, onSubta
             
             <motion.div layout className="space-y-2">
                 {sortedSubtasks.map(subtask => {
-                    const isSubtaskOverdue = subtask.deadline && isOverdue(subtask.deadline) && subtask.status !== 'done';
+                    const isSubtaskOverdue = subtask.deadline && isOverdue(subtask.deadline) && subtask.status !== TaskStatus.DONE;
                     const isAssignedToMe = subtask.assignee === currentUser.id;
                     const canEditSubtask = isAssignedToMe || currentUser.is_superuser;
 
                     return (
                         <motion.div
-                          key={subtask.id}
-                          layout
-                          whileHover={{ x: 3 }}
-                          onClick={() => navigate(`/subtasks/${subtask.id}`)}
-                          className={`p-3 rounded-lg border cursor-pointer transition hover:shadow-sm ${
-                              isSubtaskOverdue ? 'border-red-200 bg-red-50' : 
-                              isAssignedToMe ? 'border-indigo-200 bg-indigo-50' : 
-                              'border-gray-100 bg-white'
-                          }`}
-                      >
+                            key={subtask.id}
+                            layout
+                            whileHover={{ x: 3 }}
+                            onClick={() => navigate(`/subtasks/${subtask.id}`)}
+                            className={`p-3 rounded-lg border cursor-pointer transition hover:shadow-sm ${
+                                isSubtaskOverdue ? 'border-red-200 bg-red-50' : 
+                                isAssignedToMe ? 'border-indigo-200 bg-indigo-50' : 
+                                'border-gray-100 bg-white'
+                            }`}
+                        >
                             <div className="flex items-start justify-between">
                                 <div className="flex-1 flex items-start space-x-3">
-                                    {subtask.status === 'done' ? (
+                                    {subtask.status === TaskStatus.DONE ? (
                                         <CheckCircleIcon className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                                     ) : (
                                         <div className={`h-4 w-4 rounded-full mt-1 flex-shrink-0 ${
@@ -172,8 +173,8 @@ const SubtaskList = ({ subtasks, currentUser, sortConfig, setSortConfig, onSubta
                                         <p className="text-sm font-medium">{subtask.title}</p>
                                         <div className="flex flex-wrap gap-2 mt-2">
                                             <span className={`text-xs px-2 py-1 rounded-full ${
-                                                subtask.status === 'done' ? 'bg-green-100 text-green-800' : 
-                                                subtask.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
+                                                subtask.status === TaskStatus.DONE ? 'bg-green-100 text-green-800' : 
+                                                subtask.status === TaskStatus.IN_PROGRESS ? 'bg-blue-100 text-blue-800' :
                                                 'bg-gray-100 text-gray-800'
                                             }`}>
                                                 {subtask.status.replace('_', ' ')}

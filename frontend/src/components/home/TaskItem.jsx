@@ -10,22 +10,24 @@ import { useNavigate } from 'react-router-dom';
 import SubtaskModal from './SubtaskModal';
 import taskService from '../../services/TaskService';
 import SubtaskList from './SubtaskList';
+import { TaskStatus, Priority } from '../../constants/enums';
+
 
 const statusColors = {
-    'todo': 'bg-gray-200 text-gray-800',
-    'in_progress': 'bg-blue-100 text-blue-800',
-    'in_review': 'bg-purple-100 text-purple-800',
-    'in_qa': 'bg-yellow-100 text-yellow-800',
-    'rejected': 'bg-red-100 text-red-800',
-    'canceled': 'bg-gray-100 text-gray-500',
-    'done': 'bg-green-100 text-green-800'
+    [TaskStatus.TODO]: 'bg-gray-200 text-gray-800',
+    [TaskStatus.IN_PROGRESS]: 'bg-blue-100 text-blue-800',
+    [TaskStatus.IN_REVIEW]: 'bg-purple-100 text-purple-800',
+    [TaskStatus.IN_QA]: 'bg-yellow-100 text-yellow-800',
+    [TaskStatus.REJECTED]: 'bg-red-100 text-red-800',
+    [TaskStatus.CANCELED]: 'bg-gray-100 text-gray-500',
+    [TaskStatus.DONE]: 'bg-green-100 text-green-800'
 };
 
 const priorityColors = {
-    'low': 'bg-gray-100 text-gray-800',
-    'medium': 'bg-blue-100 text-blue-800',
-    'high': 'bg-orange-100 text-orange-800',
-    'urgent': 'bg-red-100 text-red-800'
+    [Priority.LOW]: 'bg-gray-100 text-gray-800',
+    [Priority.MEDIUM]: 'bg-blue-100 text-blue-800',
+    [Priority.HIGH]: 'bg-orange-100 text-orange-800',
+    [Priority.URGENT]: 'bg-red-100 text-red-800'
 };
 
 const TaskItem = ({ task, currentUser }) => {
@@ -40,7 +42,7 @@ const TaskItem = ({ task, currentUser }) => {
         const deadlineDate = new Date(deadline);
         const today = new Date();
         deadlineDate.setHours(23, 59, 59, 999);
-        return deadlineDate < today && task.status !== 'done';
+        return deadlineDate < today && task.status !== TaskStatus.DONE;
     };
 
     const isTaskOverdue = isOverdue(task.deadline);

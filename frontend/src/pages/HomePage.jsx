@@ -5,6 +5,7 @@ import authService from '../services/AuthService';
 import projectService from '../services/ProjectService';
 import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@mui/material';
+import { ProjectStatus, ViewMode } from '../constants/enums';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -32,8 +33,8 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
-  const [viewMode, setViewMode] = useState('grid');
-  const [filterStatus, setFilterStatus] = useState('all')
+  const [viewMode, setViewMode] = useState(ViewMode.GRID);
+  const [filterStatus, setFilterStatus] = useState(ProjectStatus.ALL)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,11 +65,11 @@ export default function HomePage() {
   }, []);
 
   const filteredProjects = projects.filter(project => {
-    if (filterStatus === 'all') return true;
-    if (filterStatus === 'active') return project.is_active;
-    if (filterStatus === 'inactive') return !project.is_active;
+    if (filterStatus === ProjectStatus.ALL) return true;
+    if (filterStatus === ProjectStatus.ACTIVE) return project.is_active;
+    if (filterStatus === ProjectStatus.INACTIVE) return !project.is_active;
     return true;
-  });
+});
 
   if (loading) {
     return (
@@ -133,16 +134,16 @@ export default function HomePage() {
         <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-between items-center bg-white rounded-xl shadow-md p-4 mb-6">
         <div className="flex space-x-2 mb-4 sm:mb-0">
           <button
-            onClick={() => setViewMode('grid')}
-            className={`p-2 rounded-md ${viewMode === 'grid' ? 'bg-indigo-100 text-indigo-700' : 'text-gray-500 hover:bg-gray-100'}`}
+            onClick={() => setViewMode(ViewMode.GRID)}
+            className={`p-2 rounded-md ${viewMode === ViewMode.GRID ? 'bg-indigo-100 text-indigo-700' : 'text-gray-500 hover:bg-gray-100'}`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
             </svg>
           </button>
           <button
-            onClick={() => setViewMode('list')}
-            className={`p-2 rounded-md ${viewMode === 'list' ? 'bg-indigo-100 text-indigo-700' : 'text-gray-500 hover:bg-gray-100'}`}
+            onClick={() => setViewMode(ViewMode.LIST)}
+            className={`p-2 rounded-md ${viewMode === ViewMode.LIST ? 'bg-indigo-100 text-indigo-700' : 'text-gray-500 hover:bg-gray-100'}`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -152,19 +153,19 @@ export default function HomePage() {
 
         <div className="flex space-x-2">
           <button
-            onClick={() => setFilterStatus('all')}
+            onClick={() => setFilterStatus(ProjectStatus.ALL)}
             className={`px-4 py-2 text-sm rounded-md ${filterStatus === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
           >
             All
           </button>
           <button
-            onClick={() => setFilterStatus('active')}
+            onClick={() => setFilterStatus(ProjectStatus.ACTIVE)}
             className={`px-4 py-2 text-sm rounded-md ${filterStatus === 'active' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
           >
             Active
           </button>
           <button
-            onClick={() => setFilterStatus('inactive')}
+            onClick={() => setFilterStatus(ProjectStatus.INACTIVE)}
             className={`px-4 py-2 text-sm rounded-md ${filterStatus === 'inactive' ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
           >
             Inactive
