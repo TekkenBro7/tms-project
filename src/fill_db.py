@@ -28,7 +28,7 @@ def create_users():
 
     for i in range(1, 6):
         User.objects.create_user(
-            username=f"user{i}",  # fake.user_name()
+            username=f"user{i}",
             email=fake.email(),
             password=f"password{i}",
             first_name=fake.first_name(),

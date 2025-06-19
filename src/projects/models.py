@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from model_utils import FieldTracker
 
 
 class Project(models.Model):
@@ -81,6 +82,8 @@ class Subtask(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     deadline = models.DateField(null=True, blank=True)
     completed_at = models.DateTimeField(null=True, blank=True)
+
+    tracker = FieldTracker()
 
     class Meta:
         ordering = ["created_at"]

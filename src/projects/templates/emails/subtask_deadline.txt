@@ -1,0 +1,15 @@
+Reminder: Subtask "{{ title }}" is due tomorrow!
+
+Hello {{ assignee_name }},
+
+You have a subtask with deadline approaching:
+
+Subtask: {{ title }}
+Task: {{ task_title }}
+Project: {{ project_name }}
+Deadline: {{ deadline }}
+
+Please make sure to complete it on time.
+
+---
+This is an automated notification.

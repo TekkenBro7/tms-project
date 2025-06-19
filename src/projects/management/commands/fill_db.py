@@ -39,7 +39,7 @@ class Command(BaseCommand):
 
         for i in range(1, 6):
             User.objects.create_user(
-                username=f"user{i+5}",
+                username=f"user{i}",
                 email=fake.email(),
                 password=f"password{i}",
                 first_name=fake.first_name(),

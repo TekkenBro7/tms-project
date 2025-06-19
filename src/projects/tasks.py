@@ -1,12 +1,9 @@
-import logging
-
 from celery import shared_task
-from django.conf import settings
-from django.core.mail import send_mail
 
+from core.logging import logger
 from projects.models import Subtask
-
-logger = logging.getLogger(__name__)
+from projects.services.email_sender import send_subtask_email
+from projects.services.email_templates import SubtaskEmailTemplates
 
 
 @shared_task(bind=True)
@@ -17,22 +14,31 @@ def send_subtask_deadline_notification(self, subtask_id):
             logger.warning(f"No assignee for subtask {subtask_id}")
             return
 
-        logger.info(f"Sending email for subtask {subtask_id} to {subtask.assignee.email}")
-
-        send_mail(
-            subject=f'Reminder: Subtask "{subtask.title}" is due tomorrow!',
-            message=f"""Subtask: {subtask.title}
-                        Task: {subtask.task.title}
-                        Project: {subtask.task.project.name}
-                        Deadline: {subtask.deadline.strftime("%Y-%m-%d %H:%M")}
-
-                        Please make sure to complete it on time.""",
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[subtask.assignee.email],
-            fail_silently=False,
+        email_content = SubtaskEmailTemplates.render_deadline_email(subtask)
+        send_subtask_email(
+            recipient_email=subtask.assignee.email, subject=email_content["subject"], message=email_content["message"]
         )
-        logger.info(f"Email sent successfully to {subtask.assignee.email}")
 
     except Exception as e:
         logger.error(f"Failed to send email: {str(e)}", exc_info=True)
+        raise self.retry(exc=e, countdown=60)
+
+
+@shared_task(bind=True)
+def send_subtask_update_notification(self, subtask_id, is_new=False):
+    try:
+        subtask = Subtask.objects.get(id=subtask_id)
+        if not subtask.assignee or not subtask.assignee.email:
+            logger.warning(f"No assignee for subtask {subtask_id}")
+            return
+
+        email_content = SubtaskEmailTemplates.render_update_email(subtask, is_new)
+        send_subtask_email(
+            recipient_email=subtask.assignee.email, subject=email_content["subject"], message=email_content["message"]
+        )
+
+        logger.info(f"Update email sent successfully to {subtask.assignee.email}")
+
+    except Exception as e:
+        logger.error(f"Failed to send update email: {str(e)}", exc_info=True)
         raise self.retry(exc=e, countdown=60)

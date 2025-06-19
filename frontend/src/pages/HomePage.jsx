@@ -13,6 +13,7 @@ export default function HomePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Проверяем авторизацию пользователя
         const userResponse = await authService.getCurrentUser();
         
         if (!userResponse.data) {
