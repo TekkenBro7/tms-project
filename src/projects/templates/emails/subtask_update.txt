@@ -1,16 +1,21 @@
-{% if is_new %}New subtask assigned{% else %}Subtask updated{% endif %}: "{{ title }}"
+{{ is_new|yesno:"New Subtask Assigned,Subtask Updated" }}: "{{ title }}"
 
 Hello {{ assignee_name }},
 
-{% if is_new %}You have been assigned a new subtask:{% else %}Your subtask has been updated:{% endif %}
+{% if is_new %}
+You have been assigned a new subtask:
+{% else %}
+Your subtask has been updated:
+{% endif %}
 
 Subtask: {{ title }}
 Task: {{ task_title }}
 Project: {{ project_name }}
 Status: {{ status }}
-Deadline: {{ deadline }}
+{% if deadline != "Not set" %}Deadline: {{ deadline }}{% endif %}
 
-{% if is_new %}Please check it in your task list.{% else %}Please review the updates.{% endif %}
+View subtask details: {{ task_url }}
 
 ---
-This is an automated notification.
+This is an automated notification from {{ site_name }}.
+© {{ current_year }} {{ site_name }}. All rights reserved.

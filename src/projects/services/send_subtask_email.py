@@ -1,20 +1,25 @@
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 
 from core.logging import logger
 
 
-def send_subtask_email(recipient_email, subject, message):
+def send_email(recipient_email, subject, text_content, html_content=None):
     try:
         logger.info(f"Sending email to {recipient_email} with subject: {subject}")
-        send_mail(
+
+        msg = EmailMultiAlternatives(
             subject=subject,
-            message=message,
+            body=text_content,
             from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[recipient_email],
-            fail_silently=False,
+            to=[recipient_email],
         )
+
+        if html_content:
+            msg.attach_alternative(html_content, "text/html")
+
+        msg.send()
         logger.info(f"Email sent successfully to {recipient_email}")
-        return True
+
     except Exception as e:
         logger.error(f"Failed to send email: {str(e)}", exc_info=True)
