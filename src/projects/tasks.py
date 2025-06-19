@@ -1,8 +1,8 @@
 from celery import shared_task
 
 from core.logging import logger
-from projects.email_templates import SubtaskEmailTemplates
 from projects.models import Subtask
+from projects.services.email_templates import SubtaskEmailTemplates
 from projects.services.send_subtask_email import send_email
 
 
