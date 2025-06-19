@@ -10,7 +10,7 @@ import {
 import taskService from '../services/TaskService';
 import SubtaskList from '../components/home/SubtaskList';
 import { AuthContext } from '../utils/AuthContext';
-import { TaskStatus, Priority } from '../../constants/enums';
+import { TaskStatus, Priority } from '../constants/enums';
 
 const priorityColors = {
     [Priority.LOW]: 'bg-gray-100 text-gray-800',

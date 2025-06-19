@@ -10,7 +10,7 @@ import {
 import subtaskService from '../services/SubtaskService';
 import { AuthContext } from '../utils/AuthContext';
 import SubtaskModal from '../components/home/SubtaskModal';
-import { TaskStatus } from '../../constants/enums';
+import { TaskStatus } from '../constants/enums';
 
 const statusColors = {
     [TaskStatus.TODO]: 'bg-gray-200 text-gray-800',
