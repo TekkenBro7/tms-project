@@ -15,6 +15,12 @@ env = environ.Env(
     JWT_ROTATE_REFRESH_TOKENS=(bool, True),
     JWT_BLACKLIST_AFTER_ROTATION=(bool, True),
     JWT_UPDATE_LAST_LOGIN=(bool, True),
+    EMAIL_PORT=(int, 587),
+    EMAIL_USE_TLS=(bool, True),
+    CELERY_BROKER_DB=(int, 0),
+    CELERY_RESULT_DB=(int, 2),
+    CELERY_TASK_TRACK_STARTED=(bool, True),
+    CELERY_TASK_TIME_LIMIT=(int, 1800),
 )
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"), overwrite=True)
 
@@ -192,3 +198,21 @@ LOGGING = {
         },
     },
 }
+
+# Celery settings
+
+CELERY_BROKER_URL = f'redis://{env("REDIS_HOST")}:{env("REDIS_PORT")}/{env("CELERY_BROKER_DB")}'
+CELERY_RESULT_BACKEND = f'redis://{env("REDIS_HOST")}:{env("REDIS_PORT")}/{env("CELERY_RESULT_DB")}'
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_TRACK_STARTED = env("CELERY_TASK_TRACK_STARTED")
+CELERY_TASK_TIME_LIMIT = env("CELERY_TASK_TIME_LIMIT")
+
+# Email notification settings
+
+EMAIL_BACKEND = env("EMAIL_BACKEND")
+EMAIL_HOST = env("EMAIL_HOST")
+EMAIL_PORT = env("EMAIL_PORT")
+EMAIL_USE_TLS = env("EMAIL_USE_TLS")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")

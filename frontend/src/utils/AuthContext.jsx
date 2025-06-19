@@ -52,6 +52,7 @@ export const AuthProvider = ({ children }) => {
         setLoading(true);
         try {
             await AuthService.logout();
+            window.location.reload();
         } finally {
             clearAuth();
             setLoading(false);

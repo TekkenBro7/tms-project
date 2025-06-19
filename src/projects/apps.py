@@ -6,4 +6,4 @@ class ProjectsConfig(AppConfig):
     name = "projects"
 
     def ready(self):
-        import users.signals  # noqa: F401
+        import projects.signals  # noqa: F401

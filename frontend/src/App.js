@@ -17,8 +17,8 @@ import { AuthProvider } from "./utils/AuthContext";
 
 export default function App() {
   return (
-    <AuthProvider>
       <Router>
+    <AuthProvider>
         <div className="flex flex-col min-h-screen">
           <Navbar />
           <main className="flex-grow">
@@ -40,7 +40,7 @@ export default function App() {
           </main>
           <Footer />
         </div>
-      </Router>
     </AuthProvider>
+      </Router>
   );
 }
