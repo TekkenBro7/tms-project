@@ -83,7 +83,7 @@ class Subtask(models.Model):
     deadline = models.DateField(null=True, blank=True)
     completed_at = models.DateTimeField(null=True, blank=True)
 
-    tracker = FieldTracker()
+    tracker = FieldTracker(fields=["assignee", "status", "deadline"])
 
     class Meta:
         ordering = ["created_at"]

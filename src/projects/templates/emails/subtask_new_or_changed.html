@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Subtask Update Notification</title>
+    <title>{% if is_deadline %}Deadline Reminder: {% endif %}{{ is_new|yesno:"New Subtask,Subtask Update" }}</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -26,6 +26,14 @@
             font-weight: bold;
             display: inline-block;
         }
+        .deadline-alert {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 4px;
+            margin: 15px 0;
+            border-left: 4px solid #dc3545;
+        }
         .task-card {
             background: #f8f9fa;
             border-left: 4px solid #3498db;
@@ -41,6 +49,10 @@
             color: #495057;
             min-width: 100px;
             display: inline-block;
+        }
+        .deadline {
+            color: #dc3545;
+            font-weight: bold;
         }
         .button {
             display: inline-block;
@@ -62,15 +74,25 @@
 </head>
 <body>
     <div class="header">
-        <h2>{{ is_new|yesno:"New Subtask Assigned,Subtask Updated" }}: "{{ title }}"</h2>
+        <h2>
+            {{ is_new|yesno:"New Subtask Assigned,Subtask Updated" }}: "{{ title }}"
+            {% if is_deadline %}<span style="color: #dc3545;">(Due Tomorrow)</span>{% endif %}
+        </h2>
     </div>
     
     <div class="content">
         <div class="notification-badge">
             {{ is_new|yesno:"NEW SUBTASK,UPDATE" }}
+            {% if is_deadline %} • DUE TOMORROW{% endif %}
         </div>
         
         <p>Hello, {{ assignee_name }}!</p>
+        
+        {% if is_deadline %}
+        <div class="deadline-alert">
+            <strong>⚠️ Deadline Alert:</strong> This subtask is due tomorrow!
+        </div>
+        {% endif %}
         
         <div class="task-card">
             <div class="task-detail">
@@ -90,7 +112,7 @@
                 <span>{{ project_name }}</span>
             </div>
             {% if deadline != "Not set" %}
-            <div class="task-detail">
+            <div class="task-detail {% if is_deadline %}deadline{% endif %}">
                 <span class="label">Deadline:</span>
                 <span>{{ deadline }}</span>
             </div>
@@ -102,6 +124,10 @@
             You have been assigned a new subtask. Please review the details.
             {% else %}
             Your subtask has been updated. Please check the changes.
+            {% endif %}
+            
+            {% if is_deadline %}
+            <strong>This subtask is due tomorrow!</strong>
             {% endif %}
         </p>
         

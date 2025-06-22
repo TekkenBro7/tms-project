@@ -1,4 +1,5 @@
 {{ is_new|yesno:"New Subtask Assigned,Subtask Updated" }}: "{{ title }}"
+{% if is_deadline %} (Due Tomorrow){% endif %}
 
 Hello {{ assignee_name }},
 
@@ -13,6 +14,10 @@ Task: {{ task_title }}
 Project: {{ project_name }}
 Status: {{ status }}
 {% if deadline != "Not set" %}Deadline: {{ deadline }}{% endif %}
+
+{% if is_deadline %}
+URGENT: This subtask is due tomorrow!
+{% endif %}
 
 View subtask details: {{ task_url }}
 
