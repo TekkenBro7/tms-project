@@ -23,7 +23,7 @@ const statusOrder = {
     [TaskStatus.DONE]: 7
 };  
 
-const SubtaskList = ({ subtasks, currentUser, sortConfig, setSortConfig, onSubtaskClick }) => {
+const SubtaskList = ({ subtasks, currentUser, sortConfig, setSortConfig, onSubtaskClick, isProjectActive }) => {
     const navigate = useNavigate();
 
     const sortedSubtasks = useMemo(() => {
@@ -146,7 +146,7 @@ const SubtaskList = ({ subtasks, currentUser, sortConfig, setSortConfig, onSubta
                 {sortedSubtasks.map(subtask => {
                     const isSubtaskOverdue = subtask.deadline && isOverdue(subtask.deadline) && subtask.status !== TaskStatus.DONE;
                     const isAssignedToMe = subtask.assignee === currentUser.id;
-                    const canEditSubtask = isAssignedToMe || currentUser.is_superuser;
+                    const canEditSubtask = (isAssignedToMe || currentUser.is_superuser) && isProjectActive;
 
                     return (
                         <motion.div

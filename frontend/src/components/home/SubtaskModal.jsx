@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ReactDOM from 'react-dom';
 import { XIcon, UserCircleIcon, CheckCircleIcon } from '@heroicons/react/outline';
 
-const SubtaskModal = ({ subtask, currentUser, onClose, onSave }) => {
+const SubtaskModal = ({ subtask, currentUser, onClose, onSave, isProjectActive }) => {
     const now = new Date();
     now.setHours(now.getHours() + 3);
     const today = now.toISOString().split('T')[0];
@@ -25,8 +25,8 @@ const SubtaskModal = ({ subtask, currentUser, onClose, onSave }) => {
         onSave(formData);
     };
 
-    const canEdit = subtask.assignee === currentUser.id || currentUser.is_superuser;
-
+    const canEdit = (subtask.assignee === currentUser.id || currentUser.is_superuser) && isProjectActive;
+    
     const getMinDate = () => {
         if (!subtask.deadline) return today;
         return isDeadlineOverdue ? subtask.deadline.split('T')[0] : today;

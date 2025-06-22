@@ -11,6 +11,7 @@ import SubtaskModal from './SubtaskModal';
 import taskService from '../../services/TaskService';
 import SubtaskList from './SubtaskList';
 import { TaskStatus, Priority } from '../../constants/enums';
+import subtaskService from '../../services/SubtaskService'
 
 
 const statusColors = {
@@ -30,7 +31,7 @@ const priorityColors = {
     [Priority.URGENT]: 'bg-red-100 text-red-800'
 };
 
-const TaskItem = ({ task, currentUser }) => {
+const TaskItem = ({ task, currentUser, isProjectActive }) => {
     const [expanded, setExpanded] = useState(false);
     const [subtasks, setSubtasks] = useState([]);
     const [selectedSubtask, setSelectedSubtask] = useState(null);
@@ -155,6 +156,7 @@ const TaskItem = ({ task, currentUser }) => {
                                     sortConfig={sortConfig}
                                     setSortConfig={setSortConfig}
                                     onSubtaskClick={setSelectedSubtask}
+                                    isProjectActive={isProjectActive}
                                 />
                             ) : (
                                 <div className="text-center py-3 text-gray-400 text-sm">
@@ -171,11 +173,28 @@ const TaskItem = ({ task, currentUser }) => {
                     subtask={selectedSubtask}
                     currentUser={currentUser}
                     onClose={() => setSelectedSubtask(null)}
-                    onSave={(updatedData) => {
-                        setSubtasks(prev => prev.map(st => 
-                            st.id === selectedSubtask.id ? { ...st, ...updatedData } : st
-                        ));
-                        setSelectedSubtask(null);
+                    isProjectActive={isProjectActive}
+                    onSave={async (updatedData) => {
+                        if (isProjectActive) return;
+
+                        try {
+                            const minimalData = {
+                                status: updatedData.status,
+                                title: updatedData.title,
+                                deadline: updatedData.deadline,
+                                task: selectedSubtask.task,
+                                assignee: selectedSubtask.assignee
+                            };
+                            await subtaskService.update(selectedSubtask.id, minimalData);
+
+                            setSubtasks(prev => prev.map(st => 
+                                st.id === selectedSubtask.id ? { ...st, ...updatedData } : st
+                            ));
+                        } catch (error) {
+                            console.error('Error updating subtask:', error);
+                        } finally {
+                            setSelectedSubtask(null);
+                        }
                     }}
                 />
             )}
