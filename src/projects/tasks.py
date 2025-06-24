@@ -49,7 +49,9 @@ def send_subtask_notification(self, subtask_id, is_new=False, is_deadline=False)
             deadline_tomorrow = subtask.deadline == tomorrow
 
         email_content = SubtaskEmailTemplates.render_combined_email(
-            subtask, is_new=is_new, is_deadline=is_deadline or deadline_tomorrow
+            subtask,
+            is_new=is_new,
+            is_deadline=is_deadline or deadline_tomorrow,
         )
 
         send_email(
