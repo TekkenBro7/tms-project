@@ -14,7 +14,10 @@ def send_subtask_deadline_notification(self, subtask_id):
             logger.warning(f"No assignee for subtask {subtask_id}")
             return
 
+        logger.info(f"Sending email for subtask {subtask_id} to {subtask.assignee.email}")
+
         email_content = SubtaskEmailTemplates.render_deadline_email(subtask)
+
         send_email(
             recipient_email=subtask.assignee.email,
             subject=email_content["subject"],
@@ -31,11 +34,15 @@ def send_subtask_deadline_notification(self, subtask_id):
 def send_subtask_update_notification(self, subtask_id, is_new=False):
     try:
         subtask = Subtask.objects.get(id=subtask_id)
+
         if not subtask.assignee or not subtask.assignee.email:
             logger.warning(f"No assignee for subtask {subtask_id}")
             return
 
+        logger.info(f"Sending update email for subtask {subtask_id} to {subtask.assignee.email}")
+
         email_content = SubtaskEmailTemplates.render_update_email(subtask, is_new)
+
         send_email(
             recipient_email=subtask.assignee.email,
             subject=email_content["subject"],

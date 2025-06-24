@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import AuthService from '../../services/AuthService';
-import { useCookies } from 'react-cookie';
 import { useContext } from 'react';
 import { AuthContext } from '../../utils/AuthContext';
 
@@ -14,7 +13,6 @@ export default function LoginPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
-    const [cookies, setCookie, removeCookie] = useCookies(['refresh_token']);
     const { login } = useContext(AuthContext);
 
     const handleChange = (e) => {
