@@ -85,6 +85,7 @@ const ProjectCard = ({ project, currentUser }) => {
                                             key={task.id} 
                                             task={task} 
                                             currentUser={currentUser} 
+                                            isProjectActive={project.is_active}
                                         />
                                     ))}
                                 </div>

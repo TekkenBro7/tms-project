@@ -22,6 +22,16 @@ const statusColors = {
     [TaskStatus.DONE]: 'bg-green-100 text-green-800'
 };
 
+const statusOptions = [
+    { value: TaskStatus.TODO, label: 'To Do' },
+    { value: TaskStatus.IN_PROGRESS, label: 'In Progress' },
+    { value: TaskStatus.IN_REVIEW, label: 'In Review' },
+    { value: TaskStatus.IN_QA, label: 'In QA' },
+    { value: TaskStatus.REJECTED, label: 'Rejected' },
+    { value: TaskStatus.CANCELED, label: 'Canceled' },
+    { value: TaskStatus.DONE, label: 'Done' }
+];
+
 const SubtaskDetailPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -29,6 +39,7 @@ const SubtaskDetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const { user: currentUser } = useContext(AuthContext);
+    const [isChangingStatus, setIsChangingStatus] = useState(false);
 
     useEffect(() => {
         const fetchSubtask = async () => {
@@ -64,6 +75,20 @@ const SubtaskDetailPage = () => {
         }
     };
 
+    const handleStatusChange = async (e) => {
+        const newStatus = e.target.value;
+        setIsChangingStatus(true);
+        
+        try {
+            const response = await subtaskService.partialUpdate(subtask.id, { status: newStatus });
+            setSubtask(response.data);
+        } catch (error) {
+            console.error('Error updating status:', error);
+        } finally {
+            setIsChangingStatus(false);
+        }
+    }
+
     if (loading) {
         return (
             <div className="min-h-screen bg-gray-50 p-6">
@@ -95,7 +120,8 @@ const SubtaskDetailPage = () => {
     }
 
     const isSubtaskOverdue = isOverdue(subtask.deadline);
-    const canEdit = subtask.assignee === currentUser?.id || currentUser?.is_superuser;
+    const isAssignedToMe = subtask.assignee === currentUser?.id;
+    const canEdit = (subtask.assignee === currentUser?.id || currentUser?.is_superuser) && subtask.project_is_active;
 
     return (
         <motion.div
@@ -119,9 +145,37 @@ const SubtaskDetailPage = () => {
                             <div>
                                 <h1 className="text-2xl font-bold text-gray-800 mb-2">{subtask.title}</h1>
                                 <div className="flex flex-wrap gap-2 mb-4">
-                                    <span className={`text-xs px-2 py-1 rounded-full ${statusColors[subtask.status] || 'bg-gray-100'}`}>
-                                        {subtask.status.replace('_', ' ')}
-                                    </span>
+                                    {isAssignedToMe ? (
+                                        <div className="relative">
+                                            <select
+                                                value={subtask.status}
+                                                onChange={handleStatusChange}
+                                                disabled={isChangingStatus || !canEdit}
+                                                className={`text-xs px-3 py-1 rounded-full ${
+                                                    statusColors[subtask.status] || 'bg-gray-100'
+                                                } appearance-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 pr-7`}
+                                            >
+                                                {statusOptions.map(option => (
+                                                    <option 
+                                                        key={option.value} 
+                                                        value={option.value}
+                                                        className={`${statusColors[option.value] || 'bg-gray-100'}`}
+                                                    >
+                                                        {option.label}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                                <svg className="fill-current h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <span className={`text-xs px-2 py-1 rounded-full ${statusColors[subtask.status] || 'bg-gray-100'}`}>
+                                            {subtask.status.replace('_', ' ')}
+                                        </span>
+                                    )}
                                     {isSubtaskOverdue && (
                                         <span className="flex items-center text-xs px-2 py-1 rounded-full bg-red-100 text-red-800">
                                             <ClockIcon className="h-3 w-3 mr-1" />
@@ -200,6 +254,7 @@ const SubtaskDetailPage = () => {
                     currentUser={currentUser}
                     onClose={() => setShowModal(false)}
                     onSave={handleSave}
+                    isProjectActive={subtask.project_is_active}
                 />
             )}
         </motion.div>

@@ -8,6 +8,7 @@ class SubtaskSerializer(serializers.ModelSerializer):
     assignee_name = serializers.CharField(source="assignee.get_full_name", read_only=True)
     task_title = serializers.CharField(source="task.title", read_only=True)
     project_title = serializers.CharField(source="task.project.name", read_only=True)
+    project_is_active = serializers.BooleanField(source="task.project.is_active", read_only=True)
 
     class Meta:
         model = Subtask
