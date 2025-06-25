@@ -29,9 +29,9 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('user');
     };
 
-    useEffect(() => {
-        checkAuth();
-    }, [checkAuth]);
+        useEffect(() => {
+            checkAuth();
+        }, [checkAuth]);
 
     const login = async (username, password) => {
         setLoading(true);

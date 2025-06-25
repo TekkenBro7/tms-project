@@ -175,7 +175,7 @@ const TaskItem = ({ task, currentUser, isProjectActive }) => {
                     onClose={() => setSelectedSubtask(null)}
                     isProjectActive={isProjectActive}
                     onSave={async (updatedData) => {
-                        if (isProjectActive) return;
+                        if (!isProjectActive) return;
 
                         try {
                             const minimalData = {
